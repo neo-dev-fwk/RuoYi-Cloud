@@ -116,8 +116,8 @@ services:
   #     - docker-net
 
   ruoyi-mysql:
-    container_name: ruoyi-mysql
-    image: mysql:8.0
+    container_name: ${COMPOSE_PROJECT_NAME}-mysql
+    image: mysql:${MYSQL_VERSION}
     # build:
     #   context: ./mysql
     environment:
