@@ -118,10 +118,17 @@ services:
   ruoyi-mysql:
     container_name: ruoyi-mysql
     image: mysql:8.0
-    build:
-      context: ./mysql
+    # build:
+    #   context: ./mysql
+    environment:
+      TZ: ${TZ} # 时区设置，从环境变量获取
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD} # root密码（必须设置）
+      # MYSQL_SQL_MODE: NO_ENGINE_SUBSTITUTION,STRICT_TRANS_TABLES
+      MYSQL_DATABASE: ${MYSQL_INITDB} # 初始化创建的数据库（可选）
+      # MYSQL_USER: myuser                     # 创建新用户（可选）
+      # MYSQL_PASSWORD: mypassword             # 新用户密码（可选）
     ports:
-      - "3306:3306"
+      - "${MYSQL_PORT}:3306"
     volumes:
       # - ./mysql/conf:/etc/mysql/conf.d
       - ${MYSQL_LOGS_PATH}:/logs
@@ -136,9 +143,9 @@ services:
         "--default-time-zone=+8:00",
         "--lower-case-table-names=1",
       ]
-    environment:
-      MYSQL_DATABASE: "ry-config"
-      MYSQL_ROOT_PASSWORD: mysql1234
+    # environment:
+    #   MYSQL_DATABASE: "ry-config"
+    #   MYSQL_ROOT_PASSWORD: mysql1234
 
   ruoyi-nginx:
     container_name: ruoyi-nginx
