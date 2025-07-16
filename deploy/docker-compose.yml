@@ -24,7 +24,7 @@ services:
       MYSQL_SERVICE_PORT: 3306
       MYSQL_SERVICE_DB_NAME: ry-config
       MYSQL_SERVICE_USER: root
-      MYSQL_SERVICE_PASSWORD: mysql1234
+      MYSQL_SERVICE_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MYSQL_SERVICE_DB_PARAM: characterEncoding=utf8&connectTimeout=10000&socketTimeout=30000&autoReconnect=true&useSSL=false&allowPublicKeyRetrieval=true
 
       JVM_XMS: 512m
@@ -37,7 +37,8 @@ services:
       - "9848:9848"
       - "9849:9849"
     depends_on:
-      - mysql
+      mysql:
+        condition: service_healthy # 依赖MySQL服务健康状态
 
   # Redis 内存数据库 - 用于缓存和高速数据访问
   redis:
@@ -78,8 +79,10 @@ services:
 
   # MySQL 关系型数据库 - 核心数据存储
   mysql:
-    image: mysql:${MYSQL_VERSION} # 官方MySQL镜像
     container_name: ${COMPOSE_PROJECT_NAME}-mysql
+    image: mysql:${MYSQL_VERSION} # 官方MySQL镜像
+    # build:
+    #   context: ./mysql
     restart: always # 总是重启策略
     environment:
       TZ: ${TZ} # 时区设置，从环境变量获取
@@ -92,7 +95,7 @@ services:
       - ${MYSQL_DATA_PATH}:/var/lib/mysql # 数据文件存储
       # - ./mysql/conf.d:/etc/mysql/conf.d # 自定义配置
       - ${MYSQL_LOGS_PATH}:/var/log/mysql # 日志文件
-      - ${Docker_Cfg_PATH}:/docker-entrypoint-initdb.d
+      - ${MYSQL_INIT_SCRIPT}:/docker-entrypoint-initdb.d
     ports:
       - "${MYSQL_PORT}:3306" # 暴露MySQL默认端口
     command: >
