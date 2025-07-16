@@ -81,8 +81,6 @@ services:
   mysql:
     container_name: ${COMPOSE_PROJECT_NAME}-mysql
     image: mysql:${MYSQL_VERSION} # 官方MySQL镜像
-    # build:
-    #   context: ./mysql
     restart: always # 总是重启策略
     environment:
       TZ: ${TZ} # 时区设置，从环境变量获取
