@@ -11,7 +11,6 @@ services:
   ruoyi-nacos:
     container_name: ruoyi-nacos
     image: nacos/nacos-server:v2.5.1
-    # platform: linux/amd64
     environment:
       MODE: standalone
       PREFER_HOST_MODE: hostname
