@@ -20,11 +20,11 @@ services:
       NACOS_AUTH_IDENTITY_VALUE: nacos
 
       SPRING_DATASOURCE_PLATFORM: mysql
-      MYSQL_SERVICE_HOST: mysql
+      MYSQL_SERVICE_HOST: ruoyi-mysql
       MYSQL_SERVICE_PORT: 3306
       MYSQL_SERVICE_DB_NAME: ry-config
       MYSQL_SERVICE_USER: root
-      MYSQL_SERVICE_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_SERVICE_PASSWORD: mysql1234
       MYSQL_SERVICE_DB_PARAM: characterEncoding=utf8&connectTimeout=10000&socketTimeout=30000&autoReconnect=true&useSSL=false&allowPublicKeyRetrieval=true
 
       JVM_XMS: 512m
@@ -37,9 +37,7 @@ services:
       - "9848:9848"
       - "9849:9849"
     depends_on:
-      mysql:
-        condition: service_healthy # 依赖MySQL服务健康状态
-
+      - ruoyi-mysql
   # Redis 内存数据库 - 用于缓存和高速数据访问
   redis:
     image: redis:${REDIS_VERSION} # 官方Redis镜像
@@ -78,7 +76,7 @@ services:
       - docker-net
 
   # MySQL 关系型数据库 - 核心数据存储
-  mysql:
+  ruoyi-mysql:
     container_name: ${COMPOSE_PROJECT_NAME}-mysql
     image: mysql:${MYSQL_VERSION} # 官方MySQL镜像
     restart: always # 总是重启策略
@@ -173,10 +171,10 @@ services:
       - "9201:9201"
     depends_on:
       - redis
-      - mysql
+      - ruoyi-mysql
     links:
       - redis
-      - mysql
+      - ruoyi-mysql
     networks:
       - docker-net
 
@@ -188,9 +186,9 @@ services:
     ports:
       - "9202:9202"
     depends_on:
-      - mysql
+      - ruoyi-mysql
     links:
-      - mysql
+      - ruoyi-mysql
     networks:
       - docker-net
 
@@ -202,9 +200,9 @@ services:
     ports:
       - "9203:9203"
     depends_on:
-      - mysql
+      - ruoyi-mysql
     links:
-      - mysql
+      - ruoyi-mysql
     networks:
       - docker-net
 
