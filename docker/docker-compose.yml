@@ -1,7 +1,7 @@
 services:
   ruoyi-nacos:
     container_name: ruoyi-nacos
-    image: nacos/nacos-server:latest
+    image: nacos/nacos-server:v3.0.2
     environment:
       MODE: standalone
       PREFER_HOST_MODE: hostname
@@ -21,7 +21,7 @@ services:
       JVM_XMX: 1g
     volumes:
       - ./nacos/logs/:/home/nacos/logs
-    #      - ./nacos/conf/application.properties:/home/nacos/conf/application.properties
+      - ./nacos/conf/application.properties:/home/nacos/conf/application.properties
     ports:
       - "8848:8848"
       - "9848:9848"
