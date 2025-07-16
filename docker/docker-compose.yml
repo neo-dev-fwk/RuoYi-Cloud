@@ -41,7 +41,7 @@ services:
       - ./mysql/conf:/etc/mysql/conf.d
       - ./mysql/logs:/logs
       - ./mysql/data:/var/lib/mysql
-      - ./mysql/db:/docker-entrypoint-initdb.d # 初始化 SQL 文件
+      - ./mysql/init:/docker-entrypoint-initdb.d # 初始化 SQL 文件
     command:
       [
         "mysqld",
