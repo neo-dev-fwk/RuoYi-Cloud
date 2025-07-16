@@ -75,45 +75,70 @@ services:
     networks:
       - docker-net
 
-  # MySQL 关系型数据库 - 核心数据存储
+  # # MySQL 关系型数据库 - 核心数据存储
+  # ruoyi-mysql:
+  #   container_name: ${COMPOSE_PROJECT_NAME}-mysql
+  #   image: mysql:${MYSQL_VERSION} # 官方MySQL镜像
+  #   restart: always # 总是重启策略
+  #   environment:
+  #     TZ: ${TZ} # 时区设置，从环境变量获取
+  #     MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD} # root密码（必须设置）
+  #     MYSQL_SQL_MODE: NO_ENGINE_SUBSTITUTION,STRICT_TRANS_TABLES
+  #     MYSQL_DATABASE: ${MYSQL_INITDB} # 初始化创建的数据库（可选）
+  #     # MYSQL_USER: myuser                     # 创建新用户（可选）
+  #     # MYSQL_PASSWORD: mypassword             # 新用户密码（可选）
+  #   volumes:
+  #     - ${MYSQL_DATA_PATH}:/var/lib/mysql # 数据文件存储
+  #     # - ./mysql/conf.d:/etc/mysql/conf.d # 自定义配置
+  #     - ${MYSQL_LOGS_PATH}:/var/log/mysql # 日志文件
+  #     - ${MYSQL_INIT_SCRIPT}:/docker-entrypoint-initdb.d
+  #   ports:
+  #     - "${MYSQL_PORT}:3306" # 暴露MySQL默认端口
+  #   command: >
+  #     --character-set-server=utf8mb4
+  #     --collation-server=utf8mb4_general_ci
+  #     --explicit_defaults_for_timestamp=true
+  #     --lower_case_table_names=1
+  #   healthcheck:
+  #     test:
+  #       [
+  #         "CMD",
+  #         "mysqladmin",
+  #         "ping",
+  #         "-h",
+  #         "localhost",
+  #         "-p${MYSQL_ROOT_PASSWORD}",
+  #       ]
+  #     interval: 10s
+  #     timeout: 5s
+  #     retries: 5
+  #   networks:
+  #     - docker-net
+
   ruoyi-mysql:
-    container_name: ${COMPOSE_PROJECT_NAME}-mysql
-    image: mysql:${MYSQL_VERSION} # 官方MySQL镜像
-    restart: always # 总是重启策略
-    environment:
-      TZ: ${TZ} # 时区设置，从环境变量获取
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD} # root密码（必须设置）
-      MYSQL_SQL_MODE: NO_ENGINE_SUBSTITUTION,STRICT_TRANS_TABLES
-      MYSQL_DATABASE: ${MYSQL_INITDB} # 初始化创建的数据库（可选）
-      # MYSQL_USER: myuser                     # 创建新用户（可选）
-      # MYSQL_PASSWORD: mypassword             # 新用户密码（可选）
-    volumes:
-      - ${MYSQL_DATA_PATH}:/var/lib/mysql # 数据文件存储
-      # - ./mysql/conf.d:/etc/mysql/conf.d # 自定义配置
-      - ${MYSQL_LOGS_PATH}:/var/log/mysql # 日志文件
-      - ${MYSQL_INIT_SCRIPT}:/docker-entrypoint-initdb.d
+    container_name: ruoyi-mysql
+    image: mysql:8.0
+    build:
+      context: ./mysql
     ports:
-      - "${MYSQL_PORT}:3306" # 暴露MySQL默认端口
-    command: >
-      --character-set-server=utf8mb4
-      --collation-server=utf8mb4_general_ci
-      --explicit_defaults_for_timestamp=true
-      --lower_case_table_names=1
-    healthcheck:
-      test:
-        [
-          "CMD",
-          "mysqladmin",
-          "ping",
-          "-h",
-          "localhost",
-          "-p${MYSQL_ROOT_PASSWORD}",
-        ]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-    networks:
-      - docker-net
+      - "3306:3306"
+    volumes:
+      # - ./mysql/conf:/etc/mysql/conf.d
+      - ${MYSQL_LOGS_PATH}:/logs
+      - ${MYSQL_DATA_PATH}:/var/lib/mysql
+      - ${MYSQL_INIT_SCRIPT}:/docker-entrypoint-initdb.d # 初始化 SQL 文件
+    command:
+      [
+        "mysqld",
+        "--innodb-buffer-pool-size=80M",
+        "--character-set-server=utf8mb4",
+        "--collation-server=utf8mb4_unicode_ci",
+        "--default-time-zone=+8:00",
+        "--lower-case-table-names=1",
+      ]
+    environment:
+      MYSQL_DATABASE: "ry-config"
+      MYSQL_ROOT_PASSWORD: mysql1234
 
   ruoyi-nginx:
     container_name: ruoyi-nginx
