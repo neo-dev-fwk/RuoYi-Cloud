@@ -118,8 +118,8 @@ services:
   ruoyi-mysql:
     container_name: ${COMPOSE_PROJECT_NAME}-mysql
     image: mysql:${MYSQL_VERSION}
-    # build:
-    #   context: ./mysql
+    build:
+      context: ./mysql
     environment:
       TZ: ${TZ} # 时区设置，从环境变量获取
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD} # root密码（必须设置）
@@ -146,6 +146,8 @@ services:
     # environment:
     #   MYSQL_DATABASE: "ry-config"
     #   MYSQL_ROOT_PASSWORD: mysql1234
+    networks:
+      - docker-net
 
   ruoyi-nginx:
     container_name: ruoyi-nginx

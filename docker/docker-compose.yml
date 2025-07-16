@@ -35,6 +35,9 @@ services:
     image: mysql:8.0
     build:
       context: ./mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: mysql1234
+      MYSQL_DATABASE: "ry-cloud"
     ports:
       - "3306:3306"
     volumes:
@@ -51,9 +54,7 @@ services:
         "--default-time-zone=+8:00",
         "--lower-case-table-names=1",
       ]
-    environment:
-      MYSQL_DATABASE: "ry-config"
-      MYSQL_ROOT_PASSWORD: mysql1234
+
 
   ruoyi-redis:
     container_name: ruoyi-redis
