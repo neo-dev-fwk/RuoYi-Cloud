@@ -1,7 +1,8 @@
 services:
   ruoyi-nacos:
     container_name: ruoyi-nacos
-    image: nacos/nacos-server:v3.0.2
+    image: nacos/nacos-server:v2.3.2
+    platform: linux/amd64
     environment:
       MODE: standalone
       PREFER_HOST_MODE: hostname
@@ -51,7 +52,7 @@ services:
         "--lower-case-table-names=1",
       ]
     environment:
-      MYSQL_DATABASE: "ry-cloud"
+      MYSQL_DATABASE: "ry-config"
       MYSQL_ROOT_PASSWORD: mysql1234
 
   ruoyi-redis:
