@@ -10,8 +10,8 @@ networks:
 services:
   ruoyi-nacos:
     container_name: ruoyi-nacos
-    image: nacos/nacos-server:v2.3.2
-    platform: linux/amd64
+    image: nacos/nacos-server:v2.5.1
+    # platform: linux/amd64
     environment:
       MODE: standalone
       PREFER_HOST_MODE: hostname
@@ -24,14 +24,14 @@ services:
       MYSQL_SERVICE_PORT: 3306
       MYSQL_SERVICE_DB_NAME: ry-config
       MYSQL_SERVICE_USER: root
-      MYSQL_SERVICE_PASSWORD: mysql1234
+      MYSQL_SERVICE_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MYSQL_SERVICE_DB_PARAM: characterEncoding=utf8&connectTimeout=10000&socketTimeout=30000&autoReconnect=true&useSSL=false&allowPublicKeyRetrieval=true
 
       JVM_XMS: 512m
       JVM_XMX: 1g
     volumes:
-      - ./nacos/logs/:/home/nacos/logs
-      - ./nacos/conf/application.properties:/home/nacos/conf/application.properties
+      - ./tmp/nacos/logs/:/home/nacos/logs
+      - ./config/nacos/conf/application.properties:/home/nacos/conf/application.properties
     ports:
       - "8848:8848"
       - "9848:9848"
@@ -130,7 +130,7 @@ services:
     networks:
       - docker-net
     depends_on:
-      mysql:
+      ruoyi-mysql:
         condition: service_healthy # 依赖mysql服务健康状态
 
   ruoyi-nginx:
