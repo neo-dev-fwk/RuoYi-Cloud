@@ -3,23 +3,10 @@ services:
     container_name: ruoyi-nacos
     image: nacos/nacos-server:v2.3.2
     platform: linux/amd64
+    build:
+      context: ./nacos
     environment:
-      MODE: standalone
-      PREFER_HOST_MODE: hostname
-      NACOS_AUTH_TOKEN: Gnj4Fp4OP9WJQie60IK2h8LL+wKXRM0PrhGcuW9uHhc=
-      NACOS_AUTH_IDENTITY_KEY: nacos
-      NACOS_AUTH_IDENTITY_VALUE: nacos
-
-      SPRING_DATASOURCE_PLATFORM: mysql
-      MYSQL_SERVICE_HOST: ruoyi-mysql
-      MYSQL_SERVICE_PORT: 3306
-      MYSQL_SERVICE_DB_NAME: ry-config
-      MYSQL_SERVICE_USER: root
-      MYSQL_SERVICE_PASSWORD: mysql1234
-      MYSQL_SERVICE_DB_PARAM: characterEncoding=utf8&connectTimeout=10000&socketTimeout=30000&autoReconnect=true&useSSL=false&allowPublicKeyRetrieval=true
-
-      JVM_XMS: 512m
-      JVM_XMX: 1g
+      - MODE=standalone
     volumes:
       - ./nacos/logs/:/home/nacos/logs
       - ./nacos/conf/application.properties:/home/nacos/conf/application.properties
