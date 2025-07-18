@@ -133,8 +133,8 @@ services:
         condition: service_healthy # 依赖mysql服务健康状态
 
   ruoyi-nginx:
-    container_name: ruoyi-nginx
-    image: nginx
+    container_name: ${COMPOSE_PROJECT_NAME}-nginx
+    image: nginx:${NGINX_VERSION}
     build:
       context: ./nginx
     ports:
